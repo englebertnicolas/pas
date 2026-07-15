@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Using Include="PAS.Common.Application" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\Application\PAS.Common.Application.csproj" />
+    <ProjectReference Include="..\Domain\PAS.Assets.Domain.csproj" />
+    <ProjectReference Include="..\Contracts\PAS.Assets.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>
