@@ -5,16 +5,19 @@ using PAS.Assets.Application.Funds;
 using PAS.Assets.Domain.FundAggregate;
 using PAS.Assets.Infrastructure;
 using PAS.Common.Api;
+using PAS.Common.ServiceDefaults;
 
 var builder = WebApplication.CreateBuilder(args);
 var rabbitMqCnc = builder.Configuration.GetConnectionString("RabbitMq") ?? throw new InvalidOperationException("RabbitMq connection string not found.");
-var dbCnc = builder.Configuration.GetConnectionString("AssetDb") ?? throw new InvalidOperationException("Asset database connection string not found.");
+var dbCnc = builder.Configuration.GetConnectionString("Database") ?? throw new InvalidOperationException("Database connection string not found.");
 
-builder.SetDefaultCulture();
+builder
+    .SetDefaultCulture()
+    .AddServiceDefaults();
+
 builder.Services
     .AddProblemDetails()
     .AddExceptionHandler<GlobalExceptionHandler>()
-    .AddHealthChecks().Services
     .AddDefaultOpenApi()
     .AddDefaultWolverine(dbCnc, AssetDbContext.SchemaName, rabbitMqCnc, builder.Environment.IsDevelopment(), [typeof(IAssetsApplicationMarker).Assembly]);
 
@@ -30,7 +33,7 @@ app.UseDefaultOpenApi("PAS.Assets API Reference");
 app.UseHttpsRedirection();
 
 // Map the endpoints
-app.MapHealthChecks("/health");
+app.MapDefaultEndpoints();
 app.MapFundEndpoints();
 
 app.Run();

@@ -13,28 +13,27 @@ try {
         .AddEnvironmentVariables()
         .Build();
 
-    var cnc = configuration.GetConnectionString("Db")
+    var cnc = configuration.GetConnectionString("Database")
         ?? throw new InvalidOperationException("Undefined database connection string.");
 
-    Console.WriteLine("Applying database migration for Asset schema...");
-    var assetDbOptionsBuilder = new DbContextOptionsBuilder<AssetDbContext>();
-    assetDbOptionsBuilder.UseSqlServer(cnc);
-    using (var assetDb = new AssetDbContext(assetDbOptionsBuilder.Options)) {
-        await assetDb.Database.MigrateAsync();
-        Console.WriteLine("Asset schema migrated.");
-    }
-
-    Console.WriteLine("Applying database migration for Policy schema...");
-    var policyDbOptionsBuilder = new DbContextOptionsBuilder<PolicyDbContext>();
-    policyDbOptionsBuilder.UseSqlServer(cnc);
-    using (var policyDb = new PolicyDbContext(policyDbOptionsBuilder.Options)) {
-        await policyDb.Database.MigrateAsync();
-        Console.WriteLine("Policy schema migrated.");
-    }
+    await MigrateDbContextAsync<AssetDbContext>(cnc);
+    await MigrateDbContextAsync<PolicyDbContext>(cnc);
 
 } catch (Exception ex) {
     Console.ForegroundColor = ConsoleColor.Red;
     Console.WriteLine($"Database migration critical error: {ex.Message}");
     Console.ResetColor();
     Environment.Exit(1);
+}
+
+static async Task MigrateDbContextAsync<T>(string cnc) where T : DbContext {
+    Console.WriteLine($"Applying database migration for {typeof(T).Name}...");
+    var optionsBuilder = new DbContextOptionsBuilder<T>()
+        .UseSqlServer(cnc);
+
+    using var db = (T?)Activator.CreateInstance(typeof(T), optionsBuilder.Options)
+        ?? throw new InvalidOperationException($"Could not create instance for {typeof(T).Name}");
+
+    await db.Database.MigrateAsync();
+    Console.WriteLine($"{typeof(T).Name} migrated.");
 }

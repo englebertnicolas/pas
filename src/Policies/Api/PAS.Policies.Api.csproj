@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Common\Api\PAS.Common.Api.csproj" />
+    <ProjectReference Include="..\..\Common\ServiceDefaults\PAS.Common.ServiceDefaults.csproj" />
     <ProjectReference Include="..\Application\PAS.Policies.Application.csproj" />
     <ProjectReference Include="..\Infrastructure\PAS.Policies.Infrastructure.csproj" />
   </ItemGroup>

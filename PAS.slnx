@@ -1,5 +1,11 @@
 <Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".gitignore" />
+    <File Path="aspire.config.json" />
+    <File Path="nuget.config" />
+  </Folder>
   <Folder Name="/src/">
+    <Project Path="src/Host/PAS.AppHost.csproj" />
     <Project Path="src/DbMigrator/PAS.DbMigrator.csproj" Id="d7fe68f7-c095-4118-b645-2a11c9fe79f6" />
   </Folder>
   <Folder Name="/src/Assets/">
@@ -15,6 +21,7 @@
     <Project Path="src/Common/Application/PAS.Common.Application.csproj" Id="e822cd95-cfb1-479a-b693-adb04f05ce7c" />
     <Project Path="src/Common/Domain/PAS.Common.Domain.csproj" Id="1cafb59e-b86e-4691-a4ce-abe9dcde8625" />
     <Project Path="src/Common/Infrastructure/PAS.Common.Infrastructure.csproj" Id="42e1cd55-affb-4e52-b60c-6d0787951842" />
+    <Project Path="src/Common/ServiceDefaults/PAS.Common.ServiceDefaults.csproj" />
   </Folder>
   <Folder Name="/src/Policies/">
     <Project Path="src/Policies/Api/PAS.Policies.Api.csproj" Id="89c710f4-65c7-4e2a-a698-107c95cdc193" />
