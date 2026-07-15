@@ -8,7 +8,7 @@ public record FundQueryResult(
     string Status
 );
 
-public class FundQueryHandler(IFundQueries queries) {
+public class FundQueryHandler(IAssetQueries queries) {
 
     public Task<FundQueryResult?> Handle(FundQuery request, CancellationToken cancellationToken) {
         return queries.GetFundAsync(request, cancellationToken);

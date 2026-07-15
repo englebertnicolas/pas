@@ -31,7 +31,7 @@ public static class FundEndpoints {
             .ProducesValidationProblem(422)
             .WithName("CreateCollectiveFund");
 
-        funds.MapPost("/dedicated", () => TypedResults.StatusCode(501)) // Not implemented
+        funds.MapPost("/dedicated", CreateDedicatedFundAsync)
             .ProducesProblem(501)
             .WithName("CreateDedicatedFund");
 
@@ -64,6 +64,10 @@ public static class FundEndpoints {
     public static async Task<Created<CreateCollectiveFundCommandResult>> CreateCollectiveFundAsync(IMessageBus bus, CreateCollectiveFundCommand request) {
         var resp = await bus.InvokeAsync<CreateCollectiveFundCommandResult>(request);
         return TypedResults.Created($"/funds/{resp.Id}", resp);
+    }
+
+    public static async Task<IResult> CreateDedicatedFundAsync() {
+        return TypedResults.StatusCode(501);
     }
 
     public static async Task<Ok> AddOrUpdateFundNavAsync(IMessageBus bus, AddOrUpdateFundNavCommand request) {

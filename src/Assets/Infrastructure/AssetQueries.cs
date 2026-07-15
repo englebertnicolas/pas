@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PAS.Assets.Application.Funds;
+using PAS.Assets.Application;
 using PAS.Assets.Application.Funds.Queries;
 using PAS.Common.Application.Queries;
 
 namespace PAS.Assets.Infrastructure;
 
-public class FundQueries(AssetDbContext dbContext) : IFundQueries {
+public class AssetQueries(AssetDbContext dbContext) : IAssetQueries {
 
     public Task<FundQueryResult?> GetFundAsync(FundQuery request, CancellationToken cancellationToken) {
         return dbContext.Funds

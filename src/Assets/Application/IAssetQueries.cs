@@ -1,9 +1,9 @@
 ﻿using PAS.Assets.Application.Funds.Queries;
 using PAS.Common.Application.Queries;
 
-namespace PAS.Assets.Application.Funds;
+namespace PAS.Assets.Application;
 
-public interface IFundQueries {
+public interface IAssetQueries {
     Task<PagedResult<FundListQueryItemResult>> GetFundListAsync(FundListQuery request, CancellationToken cancellationToken);
     Task<FundQueryResult?> GetFundAsync(FundQuery request, CancellationToken cancellationToken);
 }

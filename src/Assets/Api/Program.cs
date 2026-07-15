@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using PAS.Assets.Api.Endpoints;
 using PAS.Assets.Application;
-using PAS.Assets.Application.Funds;
 using PAS.Assets.Domain.FundAggregate;
 using PAS.Assets.Infrastructure;
 using PAS.Common.Api;
@@ -25,7 +24,7 @@ builder.Services
 builder.Services
     .AddDbContext<AssetDbContext>(options => options.UseSqlServer(dbCnc), ServiceLifetime.Scoped, ServiceLifetime.Singleton)
     .AddScoped<IFundRepository, FundRepository>()
-    .AddScoped<IFundQueries, FundQueries>();
+    .AddScoped<IAssetQueries, AssetQueries>();
 
 var app = builder.Build();
 app.UseExceptionHandler();
@@ -37,9 +36,3 @@ app.MapDefaultEndpoints();
 app.MapFundEndpoints();
 
 app.Run();
-
-
-/* INSTALLATION NOTES
- * Install RabbitMQ using Docker: 
- *   docker run -d --name pas -p 5672:5672 -p 15672:15672 rabbitmq:3-management
- */
