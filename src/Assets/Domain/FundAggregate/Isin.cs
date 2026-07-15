@@ -8,11 +8,11 @@ public record Isin : ValueObject {
     }
 
     public static Isin Create(string value) {
-        if (string.IsNullOrWhiteSpace(value)) throw new DomainException("Invalid ISIN.", "Isin");
+        if (string.IsNullOrWhiteSpace(value)) throw new DomainException("Invalid ISIN.", nameof(Isin));
 
         var cleanedValue = value.Trim().ToUpper();
         if (cleanedValue.Length != 12)
-            throw new DomainException("ISIN must be exactly 12 characters long.", "Isin");
+            throw new DomainException("ISIN must be exactly 12 characters long.", nameof(Isin));
 
         return new Isin(cleanedValue);
     }

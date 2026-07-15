@@ -1,7 +1,7 @@
-﻿namespace PAS.Assets.Application.Funds.Commands;
+﻿namespace PAS.Assets.Application.Commands;
 
 public record AddOrUpdateFundNavCommand(
-    string Isin,
+    long FundId,
     DateTime NavDate,
     double NavValue
 );

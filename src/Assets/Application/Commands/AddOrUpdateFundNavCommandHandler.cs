@@ -1,13 +1,12 @@
 ﻿using PAS.Assets.Domain.FundAggregate;
 
-namespace PAS.Assets.Application.Funds.Commands;
+namespace PAS.Assets.Application.Commands;
 
 public class AddOrUpdateFundNavCommandHandler(IFundRepository fundRepository) {
 
     public async Task Handle(AddOrUpdateFundNavCommand request, CancellationToken cancellationToken) {
-        var isin = Isin.Create(request.Isin);
-        var fund = await fundRepository.GetByIsinWithRecentNavsAsync(isin, request.NavDate, cancellationToken)
-            ?? throw new NotFoundException("Fund", request.Isin);
+        var fund = await fundRepository.GetByIdWithRecentNavsAsync(request.FundId, request.NavDate, cancellationToken)
+            ?? throw new NotFoundException("Fund", request.FundId);
 
         fund.AddOrUpdateNav(request.NavDate, request.NavValue);
 

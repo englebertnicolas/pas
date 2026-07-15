@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using PAS.Assets.Api.Endpoints;
 using PAS.Assets.Application;
+using PAS.Assets.Application.Queries;
+using PAS.Assets.Domain.CurrencyAggregate;
 using PAS.Assets.Domain.FundAggregate;
 using PAS.Assets.Infrastructure;
 using PAS.Common.Api;
@@ -23,6 +25,7 @@ builder.Services
 // Database, repository and query services registration
 builder.Services
     .AddDbContext<AssetDbContext>(options => options.UseSqlServer(dbCnc), ServiceLifetime.Scoped, ServiceLifetime.Singleton)
+    .AddScoped<ICurrencyRepository, CurrencyRepository>()
     .AddScoped<IFundRepository, FundRepository>()
     .AddScoped<IAssetQueries, AssetQueries>();
 
@@ -33,6 +36,7 @@ app.UseHttpsRedirection();
 
 // Map the endpoints
 app.MapDefaultEndpoints();
+app.MapCurrencyEndpoints();
 app.MapFundEndpoints();
 
 app.Run();

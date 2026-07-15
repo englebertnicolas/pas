@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace PAS.Assets.Application.Funds.Queries;
+namespace PAS.Assets.Application.Queries;
 
 public class FundQueryValidator : AbstractValidator<FundQuery> {
 

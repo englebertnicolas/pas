@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
-using PAS.Assets.Application.Funds.Commands;
-using PAS.Assets.Application.Funds.Queries;
+using PAS.Assets.Application.Commands;
+using PAS.Assets.Application.Queries;
 using PAS.Common.Application.Queries;
 using Wolverine;
 
@@ -54,7 +54,7 @@ public static class FundEndpoints {
         return TypedResults.Ok(resp);
     }
 
-    public static async Task<Results<Ok<FundQueryResult>, NotFound>> GetFundAsync(IMessageBus bus, int id) {
+    public static async Task<Results<Ok<FundQueryResult>, NotFound>> GetFundAsync(IMessageBus bus, long id) {
         var req = FundQuery.ById(id);
         var resp = await bus.InvokeAsync<FundQueryResult>(req);
         if (resp == null) return TypedResults.NotFound();

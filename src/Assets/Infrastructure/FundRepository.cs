@@ -25,6 +25,14 @@ public class FundRepository(AssetDbContext dbContext) : IFundRepository {
             .AnyAsync(x => x.Isin == isin, cancellationToken);
     }
 
+    public async Task<Fund?> GetByIdWithRecentNavsAsync(long id, DateTime fromDate, CancellationToken cancellationToken) {
+        var fund = await dbContext.Funds.SingleOrDefaultAsync(x => x.Id == id, cancellationToken);
+        if (fund != null)
+            await LoadRecentNavsAsync(fund, fromDate, cancellationToken);
+
+        return fund;
+    }
+
     public async Task<Fund?> GetByNameWithRecentNavsAsync(string name, DateTime fromDate, CancellationToken cancellationToken) {
         var fund = await dbContext.Funds.SingleOrDefaultAsync(x => x.Name == name, cancellationToken);
         if (fund != null)

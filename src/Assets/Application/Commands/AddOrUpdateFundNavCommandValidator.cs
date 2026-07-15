@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace PAS.Assets.Application.Funds.Commands;
+namespace PAS.Assets.Application.Commands;
 
 public class AddOrUpdateFundNavCommandValidator : AbstractValidator<AddOrUpdateFundNavCommand> {
 

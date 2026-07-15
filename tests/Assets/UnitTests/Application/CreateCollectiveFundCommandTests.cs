@@ -1,5 +1,5 @@
 ﻿using NSubstitute;
-using PAS.Assets.Application.Funds.Commands;
+using PAS.Assets.Application.Commands;
 using PAS.Assets.Domain.FundAggregate;
 
 namespace PAS.Assets.UnitTests.Application;
@@ -28,7 +28,7 @@ public class CreateCollectiveFundCommandTests {
             Arg.Is<Fund>(f =>
                 f.Name == name &&
                 f.Isin.Value == isin &&
-                f.Currency.Code == currency &&
+                f.CurrencyId.Value == currency &&
                 f.Status == FundStatus.Active
             )
         );

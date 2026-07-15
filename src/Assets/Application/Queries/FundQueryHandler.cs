@@ -1,7 +1,7 @@
-﻿namespace PAS.Assets.Application.Funds.Queries;
+﻿namespace PAS.Assets.Application.Queries;
 
 public record FundQueryResult(
-    int Id,
+    long Id,
     string Name,
     string Isin,
     string Type,

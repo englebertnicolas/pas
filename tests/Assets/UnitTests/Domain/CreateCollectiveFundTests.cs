@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using PAS.Assets.Domain.CurrencyAggregate;
 using PAS.Assets.Domain.FundAggregate;
 using PAS.Common.Domain;
 
@@ -14,12 +15,12 @@ public class CreateCollectiveFundTests {
         var currency = "EUR";
 
         // Act
-        var fund = Fund.CreateCollective(FundStatus.Active, name, Isin.Create(isin), Currency.Create(currency));
+        var fund = Fund.CreateCollective(FundStatus.Active, name, Isin.Create(isin), CurrencyId.Create(currency));
 
         // Assert
         fund.Name.Should().Be(name);
         fund.Isin.Value.Should().Be(isin);
-        fund.Currency.Code.Should().Be(currency);
+        fund.CurrencyId.Value.Should().Be(currency);
     }
 
     [Fact]

@@ -13,7 +13,7 @@ using PAS.Assets.Infrastructure;
 namespace PAS.Assets.Infrastructure.Migrations
 {
     [DbContext(typeof(AssetDbContext))]
-    [Migration("20260714160834_V_1_0_0")]
+    [Migration("20260715161802_V_1_0_0")]
     partial class V_1_0_0
     {
         /// <inheritdoc />
@@ -34,13 +34,45 @@ namespace PAS.Assets.Infrastructure.Migrations
             modelBuilder.HasSequence("FundSeq")
                 .IncrementsBy(10);
 
+            modelBuilder.Entity("PAS.Assets.Domain.CurrencyAggregate.Currency", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasMaxLength(3)
+                        .HasColumnType("nvarchar(3)");
+
+                    b.Property<string>("EnglishName")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
+                    b.ComplexProperty(typeof(Dictionary<string, object>), "Symbol", "PAS.Assets.Domain.CurrencyAggregate.Currency.Symbol#CurrencySymbol", b1 =>
+                        {
+                            b1.IsRequired();
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasMaxLength(3)
+                                .HasColumnType("nvarchar(3)")
+                                .HasColumnName("Symbol");
+                        });
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Currencies", "Asset");
+                });
+
             modelBuilder.Entity("PAS.Assets.Domain.FundAggregate.Fund", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseHiLo(b.Property<int>("Id"), "FundSeq");
+                    SqlServerPropertyBuilderExtensions.UseHiLo(b.Property<long>("Id"), "FundSeq");
+
+                    b.Property<string>("CurrencyId")
+                        .IsRequired()
+                        .HasMaxLength(3)
+                        .HasColumnType("nvarchar(3)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -57,17 +89,6 @@ namespace PAS.Assets.Infrastructure.Migrations
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
 
-                    b.ComplexProperty(typeof(Dictionary<string, object>), "Currency", "PAS.Assets.Domain.FundAggregate.Fund.Currency#Currency", b1 =>
-                        {
-                            b1.IsRequired();
-
-                            b1.Property<string>("Code")
-                                .IsRequired()
-                                .HasMaxLength(3)
-                                .HasColumnType("nvarchar(3)")
-                                .HasColumnName("Currency");
-                        });
-
                     b.ComplexProperty(typeof(Dictionary<string, object>), "Isin", "PAS.Assets.Domain.FundAggregate.Fund.Isin#Isin", b1 =>
                         {
                             b1.IsRequired();
@@ -80,6 +101,8 @@ namespace PAS.Assets.Infrastructure.Migrations
                         });
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CurrencyId");
 
                     b.HasIndex("Name")
                         .IsUnique();
@@ -183,27 +206,35 @@ namespace PAS.Assets.Infrastructure.Migrations
 
             modelBuilder.Entity("PAS.Assets.Domain.FundAggregate.Fund", b =>
                 {
+                    b.HasOne("PAS.Assets.Domain.CurrencyAggregate.Currency", null)
+                        .WithMany()
+                        .HasForeignKey("CurrencyId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.OwnsMany("PAS.Assets.Domain.FundAggregate.FundNav", "Navs", b1 =>
                         {
-                            b1.Property<int>("FundId")
-                                .HasColumnType("int");
-
-                            b1.Property<int>("Id")
+                            b1.Property<long>("Id")
                                 .ValueGeneratedOnAdd()
-                                .HasColumnType("int");
+                                .HasColumnType("bigint");
 
-                            SqlServerPropertyBuilderExtensions.UseHiLo(b1.Property<int>("Id"), "FundNavSeq");
+                            SqlServerPropertyBuilderExtensions.UseHiLo(b1.Property<long>("Id"), "FundNavSeq");
 
                             b1.Property<DateTime>("Date")
                                 .HasColumnType("datetime2");
 
+                            b1.Property<long>("FundId")
+                                .HasColumnType("bigint");
+
                             b1.Property<double>("Value")
                                 .HasColumnType("float");
 
-                            b1.HasKey("FundId", "Id");
+                            b1.HasKey("Id");
 
                             b1.HasIndex("Date")
                                 .IsUnique();
+
+                            b1.HasIndex("FundId");
 
                             b1.ToTable("FundNavs", "Asset");
 

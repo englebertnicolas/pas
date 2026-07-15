@@ -1,6 +1,6 @@
 ﻿using PAS.Common.Application.Queries;
 
-namespace PAS.Assets.Application.Funds.Queries;
+namespace PAS.Assets.Application.Queries;
 
 public class FundListQueryHandler(IAssetQueries queries) {
 
@@ -10,6 +10,7 @@ public class FundListQueryHandler(IAssetQueries queries) {
 }
 
 public record FundListQueryItemResult(
+    long Id,
     string Name,
     string Isin,
     string Type,

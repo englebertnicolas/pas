@@ -1,4 +1,5 @@
-﻿using PAS.Assets.Domain.Events;
+﻿using PAS.Assets.Domain.CurrencyAggregate;
+using PAS.Assets.Domain.Events;
 
 namespace PAS.Assets.Domain.FundAggregate;
 
@@ -7,7 +8,7 @@ public class Fund : Entity, IAggregateRoot {
     public FundStatus Status { get; private set; }
     public string Name { get; private set; } = null!;
     public Isin Isin { get; private set; } = null!;
-    public Currency Currency { get; private set; } = null!;
+    public CurrencyId CurrencyId { get; private set; } = null!;
 
     private readonly List<FundNav> navs = [];
     public IReadOnlyCollection<FundNav> Navs => navs.AsReadOnly();
@@ -16,23 +17,23 @@ public class Fund : Entity, IAggregateRoot {
         // Required for Entity Framework Core hydration
     }
 
-    private Fund(FundType type, FundStatus status, string name, Isin isin, Currency currency, IEnumerable<FundNav>? navs = null) {
+    private Fund(FundType type, FundStatus status, string name, Isin isin, CurrencyId currencyId, IEnumerable<FundNav>? navs = null) {
         Type = type;
         Status = status;
         Name = name;
         Isin = isin;
-        Currency = currency;
+        CurrencyId = currencyId;
         if (navs != null) this.navs = [.. navs];
     }
 
-    public static Fund CreateCollective(FundStatus status, string name, Isin isin, Currency currency, IEnumerable<FundNav>? navs = null) {
-        if (string.IsNullOrWhiteSpace(name)) throw new DomainException("Invalid fund name.");
-        return new Fund(FundType.Collective, status, name, isin, currency, navs);
+    public static Fund CreateCollective(FundStatus status, string name, Isin isin, CurrencyId currencyId, IEnumerable<FundNav>? navs = null) {
+        if (string.IsNullOrWhiteSpace(name)) throw new DomainException("Invalid fund name.", nameof(Name));
+        return new Fund(FundType.Collective, status, name, isin, currencyId, navs);
     }
 
-    public static Fund CreateDedicated(FundStatus status, string name, Isin isin, Currency currency, IEnumerable<FundNav>? navs = null) {
-        if (string.IsNullOrWhiteSpace(name)) throw new DomainException("Invalid fund name.");
-        return new Fund(FundType.Dedicated, status, name, isin, currency, navs);
+    public static Fund CreateDedicated(FundStatus status, string name, Isin isin, CurrencyId currencyId, IEnumerable<FundNav>? navs = null) {
+        if (string.IsNullOrWhiteSpace(name)) throw new DomainException("Invalid fund name.", nameof(Name));
+        return new Fund(FundType.Dedicated, status, name, isin, currencyId, navs);
     }
 
     public void AddOrUpdateNav(DateTime date, double value) => AddOrUpdateNav(FundNav.Create(date, value));
@@ -46,12 +47,12 @@ public class Fund : Entity, IAggregateRoot {
         navs.Add(nav);
 
         if (existingNav != null)
-            AddDomainEvent(new FundNavUpdatedDomainEvent(Isin.Value, Currency.Code, nav.Date, existingNav.Value, nav.Value));
+            AddDomainEvent(new FundNavUpdatedDomainEvent(Isin.Value, CurrencyId.Value, nav.Date, existingNav.Value, nav.Value));
     }
 
     public void SetClosedStatus() {
         if (Status == FundStatus.Closed)
-            throw new DomainException($"Cannot change fund status from '{Status}' to '{FundStatus.Closed}'.");
+            throw new DomainException($"Cannot change fund status from '{Status}' to '{FundStatus.Closed}'.", nameof(Status));
 
         Status = FundStatus.Closed;
 

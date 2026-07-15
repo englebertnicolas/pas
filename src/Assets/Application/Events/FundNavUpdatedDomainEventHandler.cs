@@ -1,7 +1,7 @@
 ﻿using PAS.Assets.Contracts.Events;
 using PAS.Assets.Domain.Events;
 
-namespace PAS.Assets.Application.Funds.EventHandlers;
+namespace PAS.Assets.Application.Events;
 
 public static class FundNavUpdatedDomainEventHandler {
 
