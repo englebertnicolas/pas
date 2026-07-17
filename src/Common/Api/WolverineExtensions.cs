@@ -52,10 +52,16 @@ public static class WolverineExtensions {
             var rabbitMqOptions = options.UseRabbitMq(new Uri(rabbitMqCnc))
                 // Automatically maps messages to RabbitMQ exchanges/queues based on naming conventions
                 // (rather than manual registration)
-                .UseConventionalRouting(conRoutingOptions => {
+                .UseConventionalRouting(routingConvention => {
                     // Restricts conventional routing so that only message types
                     // whose names end with "IntegrationEvent" are routed out to RabbitMQ
-                    conRoutingOptions.IncludeTypes(type => type.Name.EndsWith("IntegrationEvent"));
+                    routingConvention.IncludeTypes(type => type.Name.EndsWith("IntegrationEvent"));
+
+                    // Endpoints discovered at runtime via conventional routing escape the global 
+                    // UseDurableOutboxOnAllSendingEndpoints() policy. This explicitly forces every dynamically 
+                    // discovered RabbitMQ endpoint to use the Transactional Outbox, preventing race conditions 
+                    // where messages are sent before the SQL Server transaction commits.
+                    routingConvention.ConfigureSending((endpoint, _) => endpoint.UseDurableOutbox());
                 });
 
             if (autoProvisionRabbitMq) {

@@ -1,7 +1,7 @@
 ﻿namespace PAS.Assets.Domain.CurrencyAggregate;
 
 public record CurrencyId : ValueObject {
-    public string Value { get; private set; }
+    public string Value { get; }
 
     private CurrencyId(string value) {
         Value = value;

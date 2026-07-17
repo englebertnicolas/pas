@@ -10,7 +10,7 @@ public abstract class Entity<TId> where TId : notnull {
     public IReadOnlyCollection<IDomainEvent> DomainEvents => domainEvents.AsReadOnly();
 
     protected Entity() {
-        // Required for Entity Framework Core hydration
+        // For EF hydration
     }
 
     protected Entity(TId id) {

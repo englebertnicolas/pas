@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using PAS.Assets.Application.Commands;
 using PAS.Assets.Application.Queries;
-using PAS.Common.Application.Queries;
 using Wolverine;
 
 namespace PAS.Assets.Api.Endpoints;
@@ -24,14 +23,14 @@ public static class CurrencyEndpoints {
         return builder;
     }
 
-    public static async Task<Ok<PagedResult<CurrencyListQueryItemResult>>> GetCurrencyListAsync(IMessageBus bus, int pageNumber = 1, int pageSize = 100) {
+    public static async Task<Ok<CurrencyListQuery.Result>> GetCurrencyListAsync(IMessageBus bus, int pageNumber = 1, int pageSize = 100) {
         var req = new CurrencyListQuery(pageNumber, pageSize);
-        var resp = await bus.InvokeAsync<PagedResult<CurrencyListQueryItemResult>>(req);
+        var resp = await bus.InvokeAsync<CurrencyListQuery.Result>(req);
         return TypedResults.Ok(resp);
     }
 
-    public static async Task<Created<CreateCurrencyCommandResult>> CreateCurrencyAsync(IMessageBus bus, CreateCurrencyCommand request) {
-        var resp = await bus.InvokeAsync<CreateCurrencyCommandResult>(request);
+    public static async Task<Created<CreateCurrencyCommand.Result>> CreateCurrencyAsync(IMessageBus bus, CreateCurrencyCommand request) {
+        var resp = await bus.InvokeAsync<CreateCurrencyCommand.Result>(request);
         return TypedResults.Created($"/currencies/{resp.Id}", resp);
     }
 }

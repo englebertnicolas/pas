@@ -1,10 +1,9 @@
-﻿using PAS.Common.Application.Queries;
-
-namespace PAS.Assets.Application.Queries;
+﻿namespace PAS.Assets.Application.Queries;
 
 public interface IAssetQueries {
-    Task<PagedResult<CurrencyListQueryItemResult>> GetCurrencyListAsync(CurrencyListQuery request, CancellationToken cancellationToken);
+    Task<CurrencyListQuery.Result> GetCurrencyListAsync(CurrencyListQuery request, CancellationToken ct);
 
-    Task<PagedResult<FundListQueryItemResult>> GetFundListAsync(FundListQuery request, CancellationToken cancellationToken);
-    Task<FundQueryResult?> GetFundAsync(FundQuery request, CancellationToken cancellationToken);
+    Task<FundListQuery.Result> GetFundListAsync(FundListQuery request, CancellationToken ct);
+    Task<FundQuery.Result?> GetFundAsync(FundQuery request, CancellationToken ct);
+    Task<FundNavListQuery.Result> GetFundNavListAsync(FundNavListQuery request, CancellationToken ct);
 }

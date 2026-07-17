@@ -4,24 +4,22 @@ using PAS.Assets.Domain.FundAggregate;
 
 namespace PAS.Assets.UnitTests.Application;
 
-public class CreateCollectiveFundCommandTests {
+public class CreateFundCommandTests {
     private readonly IFundRepository fundRepositoryMock;
-    private readonly CreateCollectiveFundCommandHandler handler;
 
-    public CreateCollectiveFundCommandTests() {
+    public CreateFundCommandTests() {
         fundRepositoryMock = Substitute.For<IFundRepository>();
-        handler = new CreateCollectiveFundCommandHandler(fundRepositoryMock);
     }
 
     [Fact]
-    public async Task Handle_WithCorrectData() {
+    public void Handle_WithCorrectData() {
         // Arrange
         var name = "Global Equity Fund";
         var isin = "BE1234567890";
         var currency = "EUR";
 
         // Act
-        await handler.Handle(new(name, isin, currency));
+        CreateCollectiveFundCommand.Handler.Handle(new(name, isin, currency), fundRepositoryMock);
 
         // Assert
         fundRepositoryMock.Received(1).Add(

@@ -18,20 +18,25 @@ public class GlobalExceptionHandler(
     public async ValueTask<bool> TryHandleAsync(
         HttpContext httpContext,
         Exception exception,
-        CancellationToken cancellationToken) {
+        CancellationToken ct) {
 
         var traceId = Activity.Current?.Id ?? httpContext.TraceIdentifier;
 
-        // Determine the problem properties based on the exception type
+        // Determine the problem info based on the exception type
         var (statusCode, title, detail, errors) = exception switch {
+            BadHttpRequestException ex => (
+                StatusCodes.Status400BadRequest,
+                "Validation error",
+                "The request payload contains invalid data.",
+                new Dictionary<string, string[]> { { "", [ex.Message] } }),
+
             FluentValidation.ValidationException ex => (
                 StatusCodes.Status400BadRequest,
                 "Validation error",
                 "The request payload contains invalid data.",
                 ex.Errors
                   .GroupBy(e => e.PropertyName)
-                  .ToDictionary(g => g.Key, g => g.Select(e => e.ErrorMessage).ToArray())
-            ),
+                  .ToDictionary(g => g.Key, g => g.Select(e => e.ErrorMessage).ToArray())),
 
             DomainException ex => (
                 StatusCodes.Status422UnprocessableEntity,
@@ -70,7 +75,7 @@ public class GlobalExceptionHandler(
             validationDetails.Extensions["traceId"] = traceId;
 
             httpContext.Response.StatusCode = statusCode;
-            await httpContext.Response.WriteAsJsonAsync(validationDetails, cancellationToken);
+            await httpContext.Response.WriteAsJsonAsync(validationDetails, ct);
 
         } else {
             var problemDetails = new ProblemDetails {
@@ -82,7 +87,7 @@ public class GlobalExceptionHandler(
             problemDetails.Extensions["traceId"] = traceId;
 
             httpContext.Response.StatusCode = statusCode;
-            await httpContext.Response.WriteAsJsonAsync(problemDetails, cancellationToken);
+            await httpContext.Response.WriteAsJsonAsync(problemDetails, ct);
         }
 
         return true;

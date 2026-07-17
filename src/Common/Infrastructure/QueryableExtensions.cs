@@ -6,6 +6,82 @@ namespace PAS.Common.Infrastructure;
 public static class QueryableExtensions {
 
     /// <summary>
+    /// Orders the source IQueryable based on a specified key selector and an ascending/descending flag.
+    /// </summary>
+    public static IOrderedQueryable<TSource> OrderBy<TSource, TKey>(
+        this IQueryable<TSource> source, 
+        bool ascending, 
+        Expression<Func<TSource, TKey>> keySelector
+    ) {
+        if (source.Expression.Type.GetGenericTypeDefinition() == typeof(IOrderedQueryable<>)) {
+            var orderedSource = (IOrderedQueryable<TSource>)source;
+            if (ascending)
+                return orderedSource.ThenBy(keySelector);
+            else
+                return orderedSource.ThenByDescending(keySelector);
+
+        } else {
+            if (ascending)
+                return source.OrderBy(keySelector);
+            else
+                return source.OrderByDescending(keySelector);
+        }
+    }
+
+    /// <summary>
+    /// Orders the source IQueryable based on a specified key selector and an ascending/descending flag.
+    /// </summary>
+    public static IOrderedQueryable<TSource> OrderBy<TSource, TKey>(
+        this IQueryable<TSource> source, 
+        bool ascending, 
+        Expression<Func<TSource, TKey>> 
+        keySelector, IComparer<TKey> comparer
+    ) {
+        if (source.Expression.Type.GetGenericTypeDefinition() == typeof(IOrderedQueryable<>)) {
+            var orderedSource = (IOrderedQueryable<TSource>)source;
+            if (ascending)
+                return orderedSource.ThenBy(keySelector, comparer);
+            else
+                return orderedSource.ThenByDescending(keySelector, comparer);
+
+        } else {
+            if (ascending)
+                return source.OrderBy(keySelector, comparer);
+            else
+                return source.OrderByDescending(keySelector, comparer);
+        }
+    }
+
+    /// <summary>
+    /// Performs a subsequent ordering of the elements in a sequence based an ascending/descending flag.
+    /// </summary>
+    public static IOrderedQueryable<TSource> ThenBy<TSource, TKey>(
+        this IOrderedQueryable<TSource> source, 
+        bool ascending, 
+        Expression<Func<TSource, TKey>> keySelector
+    ) {
+        if (ascending)
+            return source.ThenBy(keySelector);
+        else
+            return source.ThenByDescending(keySelector);
+    }
+
+    /// <summary>
+    /// Performs a subsequent ordering of the elements in a sequence based an ascending/descending flag.
+    /// </summary>
+    public static IOrderedQueryable<TSource> ThenBy<TSource, TKey>(
+        this IOrderedQueryable<TSource> source, 
+        bool ascending, 
+        Expression<Func<TSource, TKey>> keySelector, 
+        IComparer<TKey> comparer
+    ) {
+        if (ascending)
+            return source.ThenBy(keySelector, comparer);
+        else
+            return source.ThenByDescending(keySelector, comparer);
+    }
+
+    /// <summary>
     /// Filters the source IQueryable based on a condition. If the condition is true, 
     /// applies the provided predicate; otherwise, returns the original source.
     /// </summary>

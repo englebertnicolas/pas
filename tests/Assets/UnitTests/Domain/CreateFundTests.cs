@@ -1,11 +1,17 @@
 ﻿using FluentAssertions;
+using NSubstitute;
 using PAS.Assets.Domain.CurrencyAggregate;
 using PAS.Assets.Domain.FundAggregate;
 using PAS.Common.Domain;
 
 namespace PAS.Assets.UnitTests.Domain;
 
-public class CreateCollectiveFundTests {
+public class CreateFundTests {
+    private readonly IFundRepository fundRepositoryMock;
+
+    public CreateFundTests() {
+        fundRepositoryMock = Substitute.For<IFundRepository>();
+    }
 
     [Fact]
     public void Create_WithCorrectData() {
@@ -15,7 +21,7 @@ public class CreateCollectiveFundTests {
         var currency = "EUR";
 
         // Act
-        var fund = Fund.CreateCollective(FundStatus.Active, name, Isin.Create(isin), CurrencyId.Create(currency));
+        var fund = Fund.CreateCollectiveFund(FundStatus.Active, name, Isin.Create(isin), CurrencyId.Create(currency));
 
         // Assert
         fund.Name.Should().Be(name);
@@ -24,7 +30,7 @@ public class CreateCollectiveFundTests {
     }
 
     [Fact]
-    public void Create_WithInvalidIsin_ShouldThrowException() {
+    public void InvalidIsin_ShouldThrowException() {
         // Arrange
         var invalidIsin = "BE123456789";
 

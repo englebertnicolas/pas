@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 
-namespace PAS.Assets.Application.Queries;
+namespace PAS.Common.Application.Queries;
 
-public class CurrencyListQueryValidator : AbstractValidator<CurrencyListQuery> {
+public abstract class PagedQueryValidator<T> : AbstractValidator<T> where T : IPagedQuery {
 
-    public CurrencyListQueryValidator() {
+    public PagedQueryValidator() {
         RuleFor(x => x.PageNumber)
             .GreaterThanOrEqualTo(1);
 

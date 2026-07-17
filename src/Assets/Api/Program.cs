@@ -29,6 +29,11 @@ builder.Services
     .AddScoped<IFundRepository, FundRepository>()
     .AddScoped<IAssetQueries, AssetQueries>();
 
+// Domain services registration
+builder.Services
+    .AddScoped<CurrencyDomainService>()
+    .AddScoped<FundDomainService>();
+
 var app = builder.Build();
 app.UseExceptionHandler();
 app.UseDefaultOpenApi("PAS.Assets API Reference");

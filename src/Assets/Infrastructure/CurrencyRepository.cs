@@ -9,9 +9,9 @@ public class CurrencyRepository(AssetDbContext dbContext) : ICurrencyRepository 
         return dbContext.Currencies.Add(currency).Entity;
     }
 
-    public Task<bool> ExistsAsync(CurrencyId id, CancellationToken cancellationToken) {
+    public Task<bool> ExistsAsync(CurrencyId id, CancellationToken ct) {
         return dbContext.Currencies
             .AsNoTracking()
-            .AnyAsync(x => x.Id == id, cancellationToken);
+            .AnyAsync(x => x.Id == id, ct);
     }
 }

@@ -3,5 +3,5 @@
 public interface ICurrencyRepository : IRepository<Currency> {
     Currency Add(Currency currency);
 
-    Task<bool> ExistsAsync(CurrencyId id, CancellationToken cancellationToken);
+    Task<bool> ExistsAsync(CurrencyId id, CancellationToken ct);
 }

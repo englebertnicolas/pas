@@ -8,9 +8,10 @@ public class PolicyDbContext(DbContextOptions<PolicyDbContext> options) : DbCont
 
     protected override void OnModelCreating(ModelBuilder builder) {
         builder.HasDefaultSchema(SchemaName);
+        builder.ApplyConfigurationsFromAssembly(typeof(PolicyDbContext).Assembly);
 
         // Est-ce vraiment nécessaire ?
-        // (Les tables Wolverine ne sont pas traitées par les migrations EF).
+        // (sachant que les tables Wolverine ne sont pas traitées par les migrations EF).
         builder.MapWolverineEnvelopeStorage();
     }
 

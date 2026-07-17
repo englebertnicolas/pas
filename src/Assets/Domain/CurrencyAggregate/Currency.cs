@@ -5,7 +5,7 @@ public class Currency : Entity<CurrencyId>, IAggregateRoot {
     public CurrencySymbol Symbol { get; private set; } = null!;
 
     private Currency() {
-        // Required for Entity Framework Core hydration
+        // For EF hydration
     }
 
     private Currency(CurrencyId id, string englishName, CurrencySymbol symbol) {
@@ -14,10 +14,12 @@ public class Currency : Entity<CurrencyId>, IAggregateRoot {
         Symbol = symbol;
     }
 
-    public static Currency Create(CurrencyId id, string englishName, CurrencySymbol? symbol = null) {
+    public static Currency Create(CurrencyId id, string englishName, CurrencySymbol? symbol) {
+        symbol ??= CurrencySymbol.Create(id.Value);
+
         if (string.IsNullOrWhiteSpace(englishName))
             throw new DomainException("Invalid currency name.", nameof(EnglishName));
 
-        return new Currency(id, englishName, symbol ?? CurrencySymbol.Create(id.Value));
+        return new(id, englishName, symbol);
     }
 }
